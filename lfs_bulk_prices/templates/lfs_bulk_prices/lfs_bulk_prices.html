@@ -1,0 +1,70 @@
+{% load i18n %}
+
+<div id="bulk-prices">
+    <h2 class="heading-first">{% trans 'Bulk prices' %}</h2>
+
+    <form action="{% url 'lfs_bulk_prices_update' %}"
+          method="POST">
+        <input type="hidden" name="product_id" value="{{ product.id }}" />
+        {% csrf_token %}
+        <table class="lfs-manage-table">
+            <tr>
+                <th class="number" width="31%">
+                    {% trans "Amount" %}
+                </th>
+                <th class="number" width="31%">
+                    {% trans "Absolute" %}
+                </th>
+                <th class="number" width="31%">
+                    {% trans "Percentual" %}
+                </th>
+                <th></th>
+            </tr>
+            {% if not prices %}
+                <tr class="bulk-price">
+                    <td class="number">
+                        <input type="hidden" name="price_id" value="first" />
+                        <input type="hidden" class="number" name="amount-first" value="1" />
+                        1
+                    </td>
+                    <td class="number">
+                        <input type="text" class="price-absolute price-absolute-first number first" name="price_absolute-first" value="0.0" />
+                    </td>
+                    <td class="number">
+                        100
+                    </td>
+                    <td class="right">
+                        <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
+                        <a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Delete"></a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% for price in prices %}
+                <tr class="bulk-price">
+                    <td class="number">
+                        <input type="hidden" name="price_id" value="{{ price.id }}" />
+                        <input type="text" class="number" name="amount-{{ price.id }}" value="{{ price.amount }}" />
+                    </td>
+                    <td class="number">
+                        <input type="text" class="price-absolute price-absolute-{{ price.id }} number {% if price.amount == 1 %}first{% endif %}" name="price_absolute-{{ price.id }}" value="{{ price.price_absolute }}" />
+                    </td>
+                    <td class="number">
+                        {% if price.amount == 1 %}
+                            100
+                        {% else %}
+                            <input type="text" class="price-percentual price-percentual-{{ price.id }} number" name="price_percentual-{{ price.id }}" value="{{ price.price_percentual }}" />
+                        {% endif %}
+                        %
+                    </td>
+                    <td class="right">
+                        <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
+                        <a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Delete"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value='{% trans "Save" %}'/>
+        <input type="reset" name='{% trans "Reset" %}'/>
+    </form>
+</div>
+<script type="text/javascript" src="{{ STATIC_URL }}lfs_bulk_prices/lfs_bulk_prices.js"></script>
