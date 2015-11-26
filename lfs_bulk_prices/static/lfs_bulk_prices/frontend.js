@@ -1,5 +1,3 @@
-"use strict";
-
 $(function() {
     $(".product input[name=quantity]").on("change", function() {
         var url = $(this).attr("bulk_prices_update_url");
