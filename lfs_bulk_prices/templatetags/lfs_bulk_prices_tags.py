@@ -1,9 +1,12 @@
-# django imports
-from django.utils.safestring import mark_safe
+import locale
 from django import template
+from django.db.models import F
+from django.db.models import Min
+from django.utils.safestring import mark_safe
 from django.template import Library
 from django.template import RequestContext
 from django.template.loader import render_to_string
+import lfs.core.views
 from .. models import BulkPrice
 register = Library()
 
@@ -12,17 +15,20 @@ register = Library()
 def bulk_prices_management(context, product):
     request = context.get("request")
     prices = BulkPrice.objects.filter(product=product)
+
+    if locale.getlocale(locale.LC_ALL)[0] is None:
+        lfs.core.views.one_time_setup()
+
     result = render_to_string("lfs_bulk_prices/lfs_bulk_prices.html", RequestContext(request, {
         "product": product,
         "prices": prices,
+        "currency": locale.localeconv()["int_curr_symbol"],
     }))
 
     return mark_safe(result)
 
 
-class GetPriceCalculatorNode(template.Node):
-    """
-    """
+class IfBulkPricesNode(template.Node):
     @classmethod
     def handle_token(cls, parser, token):
         bits = token.contents.split()
@@ -48,14 +54,29 @@ class GetPriceCalculatorNode(template.Node):
     def render(self, context):
         product = context.get("product")
         request = context.get("request")
-        if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
-            return self.nodelist_true.render(context)
+        if product.is_variant():
+            if product.price_calculator == "lfs_bulk_prices.calculator.BulkPricesCalculator":
+                return self.nodelist_true.render(context)
         else:
-            return self.nodelist_false
+            product = product.get_parent()
+            if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
+                return self.nodelist_true.render(context)
+
+        return self.nodelist_false
 
 
 @register.tag
 def ifbulkprices(parser, token):
-    """This function provides functionality for the 'ifbulkprices' template tag.
-    """
-    return GetPriceCalculatorNode.handle_token(parser, token)
+    return IfBulkPricesNode.handle_token(parser, token)
+
+
+class BulkPricesNode(template.Node):
+    def render(self, context):
+        context["bulk_prices"] = BulkPrice.objects.filter(product=context.get("product")).annotate(price_percentual_discount=100 - F("price_percentual"))
+        context["bulk_prices_min"] = BulkPrice.objects.filter(product=context.get("product")).aggregate(Min('price_absolute'))["price_absolute__min"]
+        return ''
+
+
+@register.tag('bulk_prices')
+def bulk_prices(parser, token):
+    return BulkPricesNode()

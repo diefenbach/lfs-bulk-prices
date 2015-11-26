@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n lfs_tags %}
 
 <div id="bulk-prices">
     <h2 class="heading-first">{% trans 'Bulk prices' %}</h2>
@@ -9,6 +9,9 @@
         {% csrf_token %}
         <table class="lfs-manage-table">
             <tr>
+                {% if not prices %}
+                    <th></th>
+                {% endif %}
                 <th class="number" width="31%">
                     {% trans "Amount" %}
                 </th>
@@ -22,16 +25,19 @@
             </tr>
             {% if not prices %}
                 <tr class="bulk-price">
+                    <td class="alert">
+                        {% trans "Not save yet" %}
+                    </td>
                     <td class="number">
                         <input type="hidden" name="price_id" value="first" />
-                        <input type="hidden" class="number" name="amount-first" value="1" />
-                        1
+                        <input type="text" class="number amount" name="amount-first" value="1.0" />
+                        {{ product.get_unit }}
                     </td>
                     <td class="number">
-                        <input type="text" class="price-absolute price-absolute-first number first" name="price_absolute-first" value="0.0" />
+                        <input type="text" class="price-absolute price-absolute-first number first" name="price_absolute-first" value="{{ product.price }}" /> {{ currency }}
                     </td>
                     <td class="number">
-                        100
+                        100 %
                     </td>
                     <td class="right">
                         <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
@@ -43,13 +49,15 @@
                 <tr class="bulk-price">
                     <td class="number">
                         <input type="hidden" name="price_id" value="{{ price.id }}" />
-                        <input type="text" class="number" name="amount-{{ price.id }}" value="{{ price.amount }}" />
+                        <input type="text" class="number amount" name="amount-{{ price.id }}" value="{{ price.amount }}" />
+                        {{ product.get_unit }}
                     </td>
                     <td class="number">
-                        <input type="text" class="price-absolute price-absolute-{{ price.id }} number {% if price.amount == 1 %}first{% endif %}" name="price_absolute-{{ price.id }}" value="{{ price.price_absolute }}" />
+                        <input type="text" class="price-absolute price-absolute-{{ price.id }} number {% if forloop.first %}first{% endif %}" name="price_absolute-{{ price.id }}" value="{{ price.price_absolute }}" />
+                        {{ currency }}
                     </td>
                     <td class="number">
-                        {% if price.amount == 1 %}
+                        {% if forloop.first %}
                             100
                         {% else %}
                             <input type="text" class="price-percentual price-percentual-{{ price.id }} number" name="price_percentual-{{ price.id }}" value="{{ price.price_percentual }}" />
@@ -57,14 +65,23 @@
                         %
                     </td>
                     <td class="right">
-                        <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
+                        {% if forloop.last %}
+                            <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
+                        {% endif %}
                         <a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Delete"></a>
                     </td>
                 </tr>
             {% endfor %}
         </table>
-        <input type="submit" value='{% trans "Save" %}'/>
-        <input type="reset" name='{% trans "Reset" %}'/>
+        <div class="buttons">
+            <input class="button" type="submit" value='{% trans "Save" %}'/>
+            <input class="button" type="reset" name='{% trans "Reset" %}'/>
+        </div>
     </form>
 </div>
-<script type="text/javascript" src="{{ STATIC_URL }}lfs_bulk_prices/lfs_bulk_prices.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lfs_bulk_prices/manage.js"></script>
+<script>
+    "use strict";
+    BP.price_unit = "{{ product.get_unit }}";
+    BP.currency = "{{ currency }}";
+</script>

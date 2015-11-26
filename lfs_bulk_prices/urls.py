@@ -7,4 +7,5 @@ urlpatterns = patterns('django.contrib.auth.views',
 
 urlpatterns += patterns('lfs_bulk_prices.views',
     url(r'^$', "lfs_bulk_prices_update", name="lfs_bulk_prices_update"),
+    url(r'^update-prices/(?P<product_id>\d*)$', "update_prices", name="lfs_bulk_prices_update_prices"),
 )
