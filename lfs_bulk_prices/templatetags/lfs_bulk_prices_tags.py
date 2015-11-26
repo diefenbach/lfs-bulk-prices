@@ -54,13 +54,15 @@ class IfBulkPricesNode(template.Node):
     def render(self, context):
         product = context.get("product")
         request = context.get("request")
+
         if product.is_variant():
             if product.price_calculator == "lfs_bulk_prices.calculator.BulkPricesCalculator":
                 return self.nodelist_true.render(context)
             elif product.price_calculator is None:
                 product = product.get_parent()
-                if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
-                    return self.nodelist_true.render(context)
+
+        if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
+            return self.nodelist_true.render(context)
 
         return self.nodelist_false
 
