@@ -57,10 +57,10 @@ class IfBulkPricesNode(template.Node):
         if product.is_variant():
             if product.price_calculator == "lfs_bulk_prices.calculator.BulkPricesCalculator":
                 return self.nodelist_true.render(context)
-        else:
-            product = product.get_parent()
-            if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
-                return self.nodelist_true.render(context)
+            elif product.price_calculator is None:
+                product = product.get_parent()
+                if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
+                    return self.nodelist_true.render(context)
 
         return self.nodelist_false
 
@@ -72,8 +72,12 @@ def ifbulkprices(parser, token):
 
 class BulkPricesNode(template.Node):
     def render(self, context):
-        context["bulk_prices"] = BulkPrice.objects.filter(product=context.get("product")).annotate(price_percentual_discount=100 - F("price_percentual"))
-        context["bulk_prices_min"] = BulkPrice.objects.filter(product=context.get("product")).aggregate(Min('price_absolute'))["price_absolute__min"]
+        product = context["product"]
+        if product.is_variant() and product.price_calculator is None:
+            product = product.get_parent()
+
+        context["bulk_prices"] = BulkPrice.objects.filter(product=product).annotate(price_percentual_discount=100 - F("price_percentual"))
+        context["bulk_prices_min"] = BulkPrice.objects.filter(product=product).aggregate(Min('price_absolute'))["price_absolute__min"]
         return ''
 
 

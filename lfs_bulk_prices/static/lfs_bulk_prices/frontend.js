@@ -1,5 +1,5 @@
 $(function() {
-    $(".product input[name=quantity]").on("change", function() {
+    $(document).on("change", ".product input[name=quantity]", function() {
         var url = $(this).attr("bulk_prices_update_url");
         var amount = $(this).val();
         $.get(url, {"amount": amount}, function(data) {
