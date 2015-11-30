@@ -1,4 +1,6 @@
 import locale
+import sys
+
 from django import template
 from django.db.models import F
 from django.db.models import Min
@@ -6,8 +8,11 @@ from django.utils.safestring import mark_safe
 from django.template import Library
 from django.template import RequestContext
 from django.template.loader import render_to_string
+
+from lfs.catalog.models import Product
+from lfs.catalog.settings import CATEGORY_VARIANT_CHEAPEST_PRICES
+from lfs_bulk_prices.models import BulkPrice
 import lfs.core.views
-from .. models import BulkPrice
 register = Library()
 
 
@@ -86,3 +91,62 @@ class BulkPricesNode(template.Node):
 @register.tag('bulk_prices')
 def bulk_prices(parser, token):
     return BulkPricesNode()
+
+
+class CategoryProductPricesGrossNode(template.Node):
+    def __init__(self, product_id):
+        self.product_id = template.Variable(product_id)
+
+    def render(self, context):
+        request = context.get("request")
+
+        product_id = self.product_id.resolve(context)
+        product = Product.objects.get(pk=product_id)
+
+        if product.is_variant():
+            parent = product.parent
+        else:
+            parent = product
+
+        if parent.category_variant == CATEGORY_VARIANT_CHEAPEST_PRICES:
+            if product.get_for_sale():
+                info = parent.get_cheapest_standard_price_gross(request)
+                context["standard_price"] = info["price"]
+                context["standard_price_starting_from"] = info["starting_from"]
+
+            info = parent.get_cheapest_price_gross(request)
+            context["price"] = info["price"]
+            context["price_starting_from"] = info["starting_from"]
+
+            info = parent.get_cheapest_base_price_gross(request)
+            context["base_price"] = info["price"]
+            context["base_price_starting_from"] = info["starting_from"]
+        else:
+            if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
+                starting_from = True
+            else:
+                starting_from = False
+
+            if product.get_for_sale():
+                context["standard_price"] = product.get_standard_price_gross(request, amount=sys.maxint)
+            context["price"] = product.get_price_gross(request, amount=sys.maxint)
+            context["price_starting_from"] = starting_from
+
+            context["base_price"] = product.get_base_price_gross(request, amount=sys.maxint)
+            context["base_price_starting_from"] = starting_from
+
+        if product.get_active_packing_unit():
+            context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxint)
+            context["base_packing_price_starting_from"] = starting_from
+
+        return ""
+
+
+@register.tag('bulk_prices_category_product_prices_gross')
+def bulk_prices_category_product_prices_gross(parser, token):
+    """
+    Injects all needed gross prices for the default category products view into
+    the context.
+    """
+    bits = token.contents.split()
+    return CategoryProductPricesGrossNode(bits[1])
