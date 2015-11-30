@@ -121,6 +121,10 @@ class CategoryProductPricesGrossNode(template.Node):
             info = parent.get_cheapest_base_price_gross(request)
             context["base_price"] = info["price"]
             context["base_price_starting_from"] = info["starting_from"]
+
+            if product.get_active_packing_unit():
+                context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxint)
+                context["base_packing_price_starting_from"] = info["starting_from"]
         else:
             if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
                 starting_from = True
@@ -129,15 +133,16 @@ class CategoryProductPricesGrossNode(template.Node):
 
             if product.get_for_sale():
                 context["standard_price"] = product.get_standard_price_gross(request, amount=sys.maxint)
+
             context["price"] = product.get_price_gross(request, amount=sys.maxint)
             context["price_starting_from"] = starting_from
 
             context["base_price"] = product.get_base_price_gross(request, amount=sys.maxint)
             context["base_price_starting_from"] = starting_from
 
-        if product.get_active_packing_unit():
-            context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxint)
-            context["base_packing_price_starting_from"] = starting_from
+            if product.get_active_packing_unit():
+                context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxint)
+                context["base_packing_price_starting_from"] = starting_from
 
         return ""
 
