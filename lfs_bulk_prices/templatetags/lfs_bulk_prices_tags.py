@@ -80,10 +80,15 @@ def ifbulkprices(parser, token):
 class BulkPricesNode(template.Node):
     def render(self, context):
         product = context["product"]
+        request = context["request"]
         if product.is_variant() and product.price_calculator is None:
             product = product.get_parent()
 
-        context["bulk_prices"] = BulkPrice.objects.filter(product=product).annotate(price_percentual_discount=100 - F("price_percentual"))
+        bulk_prices = []
+        for bulk_price in BulkPrice.objects.filter(product=product).annotate(price_percentual_discount=100 - F("price_percentual")):
+            bulk_price.base_price = product.get_base_price_gross(request, amount=bulk_price.amount)
+            bulk_prices.append(bulk_price)
+        context["bulk_prices"] = bulk_prices
         context["bulk_prices_min"] = BulkPrice.objects.filter(product=product).aggregate(Min('price_absolute'))["price_absolute__min"]
         return ''
 
