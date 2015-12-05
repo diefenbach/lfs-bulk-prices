@@ -160,3 +160,78 @@ def bulk_prices_category_product_prices_gross(parser, token):
     """
     bits = token.contents.split()
     return CategoryProductPricesGrossNode(bits[1])
+
+
+@register.filter(name='get_cheapest_price')
+def get_cheapest_price(product, request):
+    return product.get_price(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_price_net')
+def get_cheapest_price_net(product, request):
+    return product.get_price_net(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_price_gross')
+def get_cheapest_price_gross(product, request):
+    return product.get_price_gross(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_standard_price')
+def get_cheapest_standard_price(product, request):
+    return product.get_standard_price(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_standard_price_net')
+def get_cheapest_standard_price_net(product, request):
+    return product.get_standard_price_net(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_standard_price_gross')
+def get_cheapest_standard_price_gross(product, request):
+    return product.get_standard_price_gross(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_for_sale_price')
+def get_cheapest_for_sale_price(product, request):
+    return product.get_for_sale_price(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_for_sale_price_net')
+def get_cheapest_for_sale_price_net(product, request):
+    return product.get_for_sale_price_net(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_for_sale_price_gross')
+def get_cheapest_for_sale_price_gross(product, request):
+    return product.get_for_sale_price_gross(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_base_price')
+def get_cheapest_base_price(product, request):
+    return product.get_base_price(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_base_price_net')
+def get_cheapest_base_price_net(product, request):
+    return product.get_base_price_net(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_base_price_gross')
+def get_cheapest_base_price_gross(product, request):
+    return product.get_base_price_gross(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_base_packing_price')
+def get_cheapest_base_packing_price(product, request):
+    return product.get_base_packing_price(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_base_packing_price_net')
+def get_cheapest_base_packing_price_net(product, request):
+    return product.get_base_packing_price_net(request, amount=sys.maxint)
+
+
+@register.filter(name='get_cheapest_base_packing_price_gross')
+def get_cheapest_base_packing_price_gross(product, request):
+    return product.get_base_packing_price_gross(request, amount=sys.maxint)
