@@ -17,7 +17,7 @@ def lfs_bulk_prices_update(request):
 
     if request.method == "POST":
         # 1st delete all bulk prices for the product
-        BulkPrice.objects.filter(product_id=product_id).delete()
+        BulkPrice.objects.filter(product=product_id).delete()
 
         # 2nd add bulk prices again
         message = None

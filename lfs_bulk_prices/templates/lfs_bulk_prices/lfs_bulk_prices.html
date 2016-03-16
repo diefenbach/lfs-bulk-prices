@@ -3,16 +3,19 @@
 <div id="bulk-prices">
     <h2 class="heading-first">{% trans 'Bulk prices' %}</h2>
 
-    <form action="{% url 'lfs_bulk_prices_update' %}"
+    <form action="{% url lfs_bulk_prices_update %}"
           method="POST">
         <input type="hidden" name="product_id" value="{{ product.id }}" />
         {% csrf_token %}
+
+        {% if not prices %}
+            <div class="alert">
+                {% trans "Not save yet" %}
+            </div>
+        {% endif %}
         <table class="lfs-manage-table">
             <tr>
-                {% if not prices %}
-                    <th></th>
-                {% endif %}
-                <th class="number" width="31%">
+                    <th class="number" width="31%">
                     {% trans "Amount" %}
                 </th>
                 <th class="number" width="31%">
@@ -25,9 +28,6 @@
             </tr>
             {% if not prices %}
                 <tr class="bulk-price">
-                    <td class="alert">
-                        {% trans "Not save yet" %}
-                    </td>
                     <td class="number">
                         <input type="hidden" name="price_id" value="first" />
                         <input type="text" class="number amount" name="amount-first" value="1.0" />
@@ -39,9 +39,10 @@
                     <td class="number">
                         100 %
                     </td>
-                    <td class="right">
-                        <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
-                        <a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Delete"></a>
+                    <td class="right"
+                        width="80px">
+                        <a href="" class="add-bulk-price-button"><img src="{{ STATIC_URL }}icons/add.png" alt="Add"></a>
+                        <a href="" class="delete-bulk-price-button"><img src="{{ STATIC_URL }}icons/delete.png" alt="Delete"></a>
                     </td>
                 </tr>
             {% endif %}
@@ -66,9 +67,9 @@
                     </td>
                     <td class="right">
                         {% if forloop.last %}
-                            <a href="" class="add-bulk-price-button"><img src="/static/lfs/icons/add.png" alt="Add"></a>
+                            <a href="" class="add-bulk-price-button"><img src="{{ STATIC_URL }}icons/add.png" alt="Add"></a>
                         {% endif %}
-                        <a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Delete"></a>
+                        <a href="" class="delete-bulk-price-button"><img src="{{ STATIC_URL }}icons/delete.png" alt="Delete"></a>
                     </td>
                 </tr>
             {% endfor %}

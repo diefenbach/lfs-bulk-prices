@@ -85,7 +85,8 @@ class BulkPricesNode(template.Node):
             product = product.get_parent()
 
         bulk_prices = []
-        for bulk_price in BulkPrice.objects.filter(product=product).annotate(price_percentual_discount=100 - F("price_percentual")):
+        for bulk_price in BulkPrice.objects.filter(product=product):
+            bulk_price.price_percentual_discount = 100 - bulk_price.price_percentual
             bulk_price.base_price = product.get_base_price_gross(request, amount=bulk_price.amount)
             bulk_prices.append(bulk_price)
         context["bulk_prices"] = bulk_prices

@@ -9,7 +9,7 @@ class BulkPricesCalculator(GrossPriceCalculator):
         """
         """
         if self.product.is_variant() and (self.product.price_calculator is None):
-            product = self.product.get_parent()
+            product = self.product.parent
         else:
             product = self.product
 

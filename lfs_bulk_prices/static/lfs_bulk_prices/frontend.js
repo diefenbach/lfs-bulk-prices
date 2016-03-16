@@ -1,5 +1,5 @@
 $(function() {
-    $(document).on("keyup", ".product input[name=quantity]", function() {
+    $(".product input[name=quantity]").live("keyup", function() {
         var url = $(this).attr("bulk_prices_update_url");
         var amount = $(this).val();
         $.get(url, {"amount": amount}, function(data) {

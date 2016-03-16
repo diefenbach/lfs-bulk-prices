@@ -23,7 +23,7 @@ function bulk_price_row() {
                '<input type="text" class="price-percentual price-percentual-' + id + ' right " name="price_percentual-' + id + '" value="0.0" /> %' +
                '</td>' +
                '<td class="right">' +
-               '<a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Add"></a>' +
+               '<a href="" class="delete-bulk-price-button"><img src="/static/icons/delete.png" alt="Delete"></a>' +
                '</td>' +
                '</tr>';
     return row;
