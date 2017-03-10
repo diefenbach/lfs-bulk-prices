@@ -1,4 +1,4 @@
-from lfs.gross_price import GrossPriceCalculator
+from lfs.gross_price.calculator import GrossPriceCalculator
 from . models import BulkPrice
 
 
