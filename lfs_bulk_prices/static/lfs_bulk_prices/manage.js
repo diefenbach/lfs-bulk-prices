@@ -7,7 +7,7 @@ function bulk_price_row() {
 
     var vals = [];
     $(".bulk-price input.amount").each(function(index, item) {
-        vals.push($(item).val());
+        vals.push($(item).val().replace(",", "."));
     });
     var max = Math.max.apply(null, vals) + 1;
 
@@ -17,10 +17,10 @@ function bulk_price_row() {
                '<input type="text" class="number amount" name="amount-' + id + '" value="' + max + '" /> ' + BP.price_unit +
                '</td>' +
                '<td class="number">' +
-               '<input type="text" class="price-absolute price-absolute-' + id + ' right" name="price_absolute-' + id + '" value="0.0" /> ' + BP.currency +
+               '<input type="text" class="price-absolute price-absolute-' + id + ' right" name="price_absolute-' + id + '" value="0,0" /> ' + BP.currency +
                '</td>' +
                '<td class="number">' +
-               '<input type="text" class="price-percentual price-percentual-' + id + ' right " name="price_percentual-' + id + '" value="0.0" /> %' +
+               '<input type="text" class="price-percentual price-percentual-' + id + ' right " name="price_percentual-' + id + '" value="0,0" /> %' +
                '</td>' +
                '<td class="right">' +
                '<a href="" class="delete-bulk-price-button"><img src="/static/lfs/icons/delete.png" alt="Add"></a>' +
@@ -44,6 +44,7 @@ function calculate_absolute_prices(new_price) {
 function calculate_percentual_price(price_absolute) {
     var absolute = price_absolute.val();
     var base = $(".price-absolute.first").val();
+    base = base.replace(",", ".");
     var id = price_absolute.attr("name").split("-")[1];
     var price = ((absolute / base) * 100).toFixed(2);
     $(".price-percentual-" + id).val(price)
@@ -53,6 +54,7 @@ function calculate_percentual_price(price_absolute) {
 function calculate_absolute_price(price_percentual) {
     var percent = price_percentual.val();
     var base = $(".price-absolute.first").val();
+    base = base.replace(",", ".");
     var id = price_percentual.attr("name").split("-")[1];
     var price = ((base / 100) * percent).toFixed(2);
     $(".price-absolute-" + id).val(price)

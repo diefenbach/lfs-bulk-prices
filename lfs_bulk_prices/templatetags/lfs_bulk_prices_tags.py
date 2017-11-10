@@ -24,12 +24,11 @@ def bulk_prices_management(context, product):
     if locale.getlocale(locale.LC_ALL)[0] is None:
         lfs.core.views.one_time_setup()
 
-    result = render_to_string("lfs_bulk_prices/lfs_bulk_prices.html", RequestContext(request, {
+    result = render_to_string("lfs_bulk_prices/lfs_bulk_prices.html", request=request, context={
         "product": product,
         "prices": prices,
-        "request": request,
         "currency": locale.localeconv()["int_curr_symbol"],
-    }))
+    })
 
     return mark_safe(result)
 

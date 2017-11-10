@@ -1,4 +1,5 @@
 import json
+import locale
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -23,18 +24,18 @@ def lfs_bulk_prices_update(request):
         message = None
         for price_id in request.POST.getlist("price_id"):
             try:
-                amount = float(request.POST.get("amount-{}".format(price_id)))
-            except (TypeError, ValueError):
+                amount = locale.atof(request.POST.get("amount-{}".format(price_id)))
+            except (TypeError, ValueError, AttributeError):
                 amount = 1.0
 
             try:
-                price_absolute = float(request.POST.get("price_absolute-{}".format(price_id)))
-            except (TypeError, ValueError):
+                price_absolute = locale.atof(request.POST.get("price_absolute-{}".format(price_id)))
+            except (TypeError, ValueError, AttributeError):
                 price_absolute = 0.0
 
             try:
-                price_percentual = float(request.POST.get("price_percentual-{}".format(price_id)))
-            except (TypeError, ValueError):
+                price_percentual = locale.atof(request.POST.get("price_percentual-{}".format(price_id)))
+            except (TypeError, ValueError, AttributeError):
                 price_percentual = 0.0
 
             try:
