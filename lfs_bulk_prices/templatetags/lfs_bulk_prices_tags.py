@@ -27,6 +27,7 @@ def bulk_prices_management(context, product):
     result = render_to_string("lfs_bulk_prices/lfs_bulk_prices.html", RequestContext(request, {
         "product": product,
         "prices": prices,
+        "request": request,
         "currency": locale.localeconv()["int_curr_symbol"],
     }))
 
