@@ -33,9 +33,9 @@ function calculate_absolute_prices(new_price) {
     $(".price-absolute").each(function(index, item) {
         if (!$(item).hasClass("first")) {
             var id = $(item).attr("name").split("-")[1];
-            var percent = $(".price-percentual-" + id).val();
+            var percent = $(".price-percentual-" + id).val().replace(",", ".");
             console.log(new_price, percent);
-            var price = ((new_price / 100) * percent).toFixed(2);
+            var price = ((new_price / 100) * percent).toFixed(2).replace(".", ",");
             $(".price-absolute-" + id).val(price);
         }
     });
@@ -43,20 +43,18 @@ function calculate_absolute_prices(new_price) {
 
 function calculate_percentual_price(price_absolute) {
     var absolute = price_absolute.val();
-    var base = $(".price-absolute.first").val();
-    base = base.replace(",", ".");
+    var base = $(".price-absolute.first").val().replace(",", ".");
     var id = price_absolute.attr("name").split("-")[1];
-    var price = ((absolute / base) * 100).toFixed(2);
+    var price = ((absolute / base) * 100).toFixed(2).replace(".", ",");
     $(".price-percentual-" + id).val(price)
 
 };
 
 function calculate_absolute_price(price_percentual) {
     var percent = price_percentual.val();
-    var base = $(".price-absolute.first").val();
-    base = base.replace(",", ".");
+    var base = $(".price-absolute.first").val().replace(",", ".");
     var id = price_percentual.attr("name").split("-")[1];
-    var price = ((base / 100) * percent).toFixed(2);
+    var price = ((base / 100) * percent).toFixed(2).replace(".", ",");
     $(".price-absolute-" + id).val(price)
 };
 
