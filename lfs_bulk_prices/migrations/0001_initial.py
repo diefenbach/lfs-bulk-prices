@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('price', models.DecimalField(verbose_name='Price', max_digits=10, decimal_places=2)),
-                ('product', models.ForeignKey(to='catalog.Product')),
+                ('product', models.ForeignKey(to='catalog.Product', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('price',),

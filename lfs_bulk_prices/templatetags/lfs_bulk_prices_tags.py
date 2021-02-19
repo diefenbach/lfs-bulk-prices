@@ -128,7 +128,7 @@ class CategoryProductPricesGrossNode(template.Node):
             context["base_price_starting_from"] = info["starting_from"]
 
             if product.get_active_packing_unit():
-                context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxint)
+                context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxsize)
                 context["base_packing_price_starting_from"] = info["starting_from"]
         else:
             if product.get_price_calculator(request).__class__.__name__ == "BulkPricesCalculator":
@@ -137,16 +137,16 @@ class CategoryProductPricesGrossNode(template.Node):
                 starting_from = False
 
             if product.get_for_sale():
-                context["standard_price"] = product.get_standard_price_gross(request, amount=sys.maxint)
+                context["standard_price"] = product.get_standard_price_gross(request, amount=sys.maxsize)
 
-            context["price"] = product.get_price_gross(request, amount=sys.maxint)
+            context["price"] = product.get_price_gross(request, amount=sys.maxsize)
             context["price_starting_from"] = starting_from
 
-            context["base_price"] = product.get_base_price_gross(request, amount=sys.maxint)
+            context["base_price"] = product.get_base_price_gross(request, amount=sys.maxsize)
             context["base_price_starting_from"] = starting_from
 
             if product.get_active_packing_unit():
-                context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxint)
+                context["base_packing_price"] = product.get_base_packing_price_gross(request, amount=sys.maxsize)
                 context["base_packing_price_starting_from"] = starting_from
 
         return ""
@@ -164,74 +164,74 @@ def bulk_prices_category_product_prices_gross(parser, token):
 
 @register.filter(name='get_cheapest_price')
 def get_cheapest_price(product, request):
-    return product.get_price(request, amount=sys.maxint)
+    return product.get_price(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_price_net')
 def get_cheapest_price_net(product, request):
-    return product.get_price_net(request, amount=sys.maxint)
+    return product.get_price_net(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_price_gross')
 def get_cheapest_price_gross(product, request):
-    return product.get_price_gross(request, amount=sys.maxint)
+    return product.get_price_gross(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_standard_price')
 def get_cheapest_standard_price(product, request):
-    return product.get_standard_price(request, amount=sys.maxint)
+    return product.get_standard_price(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_standard_price_net')
 def get_cheapest_standard_price_net(product, request):
-    return product.get_standard_price_net(request, amount=sys.maxint)
+    return product.get_standard_price_net(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_standard_price_gross')
 def get_cheapest_standard_price_gross(product, request):
-    return product.get_standard_price_gross(request, amount=sys.maxint)
+    return product.get_standard_price_gross(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_for_sale_price')
 def get_cheapest_for_sale_price(product, request):
-    return product.get_for_sale_price(request, amount=sys.maxint)
+    return product.get_for_sale_price(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_for_sale_price_net')
 def get_cheapest_for_sale_price_net(product, request):
-    return product.get_for_sale_price_net(request, amount=sys.maxint)
+    return product.get_for_sale_price_net(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_for_sale_price_gross')
 def get_cheapest_for_sale_price_gross(product, request):
-    return product.get_for_sale_price_gross(request, amount=sys.maxint)
+    return product.get_for_sale_price_gross(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_base_price')
 def get_cheapest_base_price(product, request):
-    return product.get_base_price(request, amount=sys.maxint)
+    return product.get_base_price(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_base_price_net')
 def get_cheapest_base_price_net(product, request):
-    return product.get_base_price_net(request, amount=sys.maxint)
+    return product.get_base_price_net(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_base_price_gross')
 def get_cheapest_base_price_gross(product, request):
-    return product.get_base_price_gross(request, amount=sys.maxint)
+    return product.get_base_price_gross(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_base_packing_price')
 def get_cheapest_base_packing_price(product, request):
-    return product.get_base_packing_price(request, amount=sys.maxint)
+    return product.get_base_packing_price(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_base_packing_price_net')
 def get_cheapest_base_packing_price_net(product, request):
-    return product.get_base_packing_price_net(request, amount=sys.maxint)
+    return product.get_base_packing_price_net(request, amount=sys.maxsize)
 
 
 @register.filter(name='get_cheapest_base_packing_price_gross')
 def get_cheapest_base_packing_price_gross(product, request):
-    return product.get_base_packing_price_gross(request, amount=sys.maxint)
+    return product.get_base_packing_price_gross(request, amount=sys.maxsize)

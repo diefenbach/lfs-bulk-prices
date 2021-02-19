@@ -5,6 +5,7 @@
 
     <form action="{% url 'lfs_bulk_prices_update' %}"
           method="POST">
+        {% csrf_token %}
         <input type="hidden" name="product_id" value="{{ product.id }}" />
         {% csrf_token %}
         <table class="lfs-manage-table">

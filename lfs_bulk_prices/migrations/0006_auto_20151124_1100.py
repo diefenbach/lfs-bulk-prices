@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='bulkprice',
             name='product',
-            field=models.ForeignKey(verbose_name='Product', to='catalog.Product'),
+            field=models.ForeignKey(verbose_name='Product', to='catalog.Product', on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='bulkprice',

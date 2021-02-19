@@ -13,7 +13,7 @@ class BulkPrice(models.Model):
             ("product", "amount"),
         )
 
-    product = models.ForeignKey(Product, verbose_name=_(u"Product"))
+    product = models.ForeignKey(Product, verbose_name=_(u"Product"), on_delete=models.CASCADE)
     amount = models.FloatField(_(u"Amount"))
     price_absolute = models.FloatField(_(u"Price absolute"), default=0.0)
     price_percentual = models.FloatField(_(u"Price percentual"), default=0.0)
