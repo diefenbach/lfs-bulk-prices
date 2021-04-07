@@ -1,17 +1,17 @@
 "use strict";
 
-var BP = BP || {};
+let BP = {};
 
 function bulk_price_row() {
-    var id = (new Date).getTime();
+    let id = (new Date).getTime();
 
-    var vals = [];
+    let vals = [];
     $(".bulk-price input.amount").each(function(index, item) {
         vals.push($(item).val().replace(",", "."));
     });
-    var max = Math.max.apply(null, vals) + 1;
+    let max = Math.max.apply(null, vals) + 1;
 
-    var row =  '<tr class="bulk-price">' +
+    let row =  '<tr class="bulk-price">' +
                '<td class="number">' +
                '<input type="hidden" name="price_id" value="' + id + '" />' +
                '<input type="text" class="number amount" name="amount-' + id + '" value="' + max + '" /> ' + BP.price_unit +
@@ -27,36 +27,35 @@ function bulk_price_row() {
                '</td>' +
                '</tr>';
     return row;
-};
+}
 
-function calculate_absolute_prices(new_price) {
+function calculate_absolute_prices(basePrice) {
     $(".price-absolute").each(function(index, item) {
         if (!$(item).hasClass("first")) {
-            var id = $(item).attr("name").split("-")[1];
-            var percent = $(".price-percentual-" + id).val().replace(",", ".");
-            console.log(new_price, percent);
-            var price = ((new_price / 100) * percent).toFixed(2).replace(".", ",");
+            let id = $(item).attr("name").split("-")[1];
+            let percent = $(".price-percentual-" + id).val().replace(",", ".");
+            let price = ((basePrice / 100) * percent).toFixed(2).replace(".", ",");
             $(".price-absolute-" + id).val(price);
         }
     });
-};
+}
 
-function calculate_percentual_price(price_absolute) {
-    var absolute = price_absolute.val();
-    var base = $(".price-absolute.first").val().replace(",", ".");
-    var id = price_absolute.attr("name").split("-")[1];
-    var price = ((absolute / base) * 100).toFixed(2).replace(".", ",");
+function calculate_percentual_price(priceAbsolute) {
+    let absolute = +priceAbsolute.val().replace(',', '.');
+    let base = $(".price-absolute.first").val().replace(",", ".");
+    let id = priceAbsolute.attr("name").split("-")[1];
+    let price = ((absolute / base) * 100).toFixed(2).replace(".", ",");
     $(".price-percentual-" + id).val(price)
 
-};
+}
 
 function calculate_absolute_price(price_percentual) {
-    var percent = price_percentual.val();
-    var base = $(".price-absolute.first").val().replace(",", ".");
-    var id = price_percentual.attr("name").split("-")[1];
-    var price = ((base / 100) * percent).toFixed(2).replace(".", ",");
+    let percent = +price_percentual.val().replace(',', '.');
+    let base = $(".price-absolute.first").val().replace(",", ".");
+    let id = price_percentual.attr("name").split("-")[1];
+    let price = ((base / 100) * percent).toFixed(2).replace(".", ",");
     $(".price-absolute-" + id).val(price)
-};
+}
 
 
 $(function() {
@@ -66,7 +65,7 @@ $(function() {
     });
 
     $(document).on("click", ".add-bulk-price-button", function() {
-        var row = $("tr.bulk-price").last();
+        let row = $("tr.bulk-price").last();
         row.after(bulk_price_row());
         return false;
     });
@@ -85,7 +84,8 @@ $(function() {
     });
 
     $(document).on("change", ".price-absolute.first", function() {
-        calculate_absolute_prices($(this).val());
+        let firstPrice = $(this).val().replace(',', '.')
+        calculate_absolute_prices(+firstPrice);
     });
 
 });
