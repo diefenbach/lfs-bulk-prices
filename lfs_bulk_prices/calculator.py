@@ -1,13 +1,12 @@
 from lfs.gross_price.calculator import GrossPriceCalculator
-from . models import BulkPrice
+from .models import BulkPrice
 
 
 class BulkPricesCalculator(GrossPriceCalculator):
-    """
-    """
+    """ """
+
     def get_price(self, with_properties=True, amount=1):
-        """
-        """
+        """ """
         if self.product.is_variant() and (self.product.price_calculator is None):
             product = self.product.get_parent()
         else:

@@ -13,6 +13,7 @@ from lfs.catalog.models import Product
 from lfs.catalog.settings import CATEGORY_VARIANT_CHEAPEST_PRICES
 from lfs_bulk_prices.models import BulkPrice
 import lfs.core.views
+
 register = Library()
 
 
@@ -24,11 +25,15 @@ def bulk_prices_management(context, product):
     if locale.getlocale(locale.LC_ALL)[0] is None:
         lfs.core.views.one_time_setup()
 
-    result = render_to_string("lfs_bulk_prices/lfs_bulk_prices.html", request=request, context={
-        "product": product,
-        "prices": prices,
-        "currency": locale.localeconv()["int_curr_symbol"],
-    })
+    result = render_to_string(
+        "lfs_bulk_prices/lfs_bulk_prices.html",
+        request=request,
+        context={
+            "product": product,
+            "prices": prices,
+            "currency": locale.localeconv()["int_curr_symbol"],
+        },
+    )
 
     return mark_safe(result)
 
@@ -38,12 +43,11 @@ class IfBulkPricesNode(template.Node):
     def handle_token(cls, parser, token):
         bits = token.contents.split()
         if len(bits) != 1:
-            raise template.TemplateSyntaxError(
-                "'%s' tag takes one argument" % bits[0])
-        end_tag = 'endifbulkprices'
-        nodelist_true = parser.parse(('else', end_tag))
+            raise template.TemplateSyntaxError("'%s' tag takes one argument" % bits[0])
+        end_tag = "endifbulkprices"
+        nodelist_true = parser.parse(("else", end_tag))
         token = parser.next_token()
-        if token.contents == 'else':  # there is an 'else' clause in the tag
+        if token.contents == "else":  # there is an 'else' clause in the tag
             nodelist_false = parser.parse((end_tag,))
             parser.delete_first_token()
         else:
@@ -85,15 +89,19 @@ class BulkPricesNode(template.Node):
             product = product.get_parent()
 
         bulk_prices = []
-        for bulk_price in BulkPrice.objects.filter(product=product).annotate(price_percentual_discount=100 - F("price_percentual")):
+        for bulk_price in BulkPrice.objects.filter(product=product).annotate(
+            price_percentual_discount=100 - F("price_percentual")
+        ):
             bulk_price.base_price = product.get_base_price_gross(request, amount=bulk_price.amount)
             bulk_prices.append(bulk_price)
         context["bulk_prices"] = bulk_prices
-        context["bulk_prices_min"] = BulkPrice.objects.filter(product=product).aggregate(Min('price_absolute'))["price_absolute__min"]
-        return ''
+        context["bulk_prices_min"] = BulkPrice.objects.filter(product=product).aggregate(Min("price_absolute"))[
+            "price_absolute__min"
+        ]
+        return ""
 
 
-@register.tag('bulk_prices')
+@register.tag("bulk_prices")
 def bulk_prices(parser, token):
     return BulkPricesNode()
 
@@ -152,7 +160,7 @@ class CategoryProductPricesGrossNode(template.Node):
         return ""
 
 
-@register.tag('bulk_prices_category_product_prices_gross')
+@register.tag("bulk_prices_category_product_prices_gross")
 def bulk_prices_category_product_prices_gross(parser, token):
     """
     Injects all needed gross prices for the default category products view into
@@ -162,76 +170,76 @@ def bulk_prices_category_product_prices_gross(parser, token):
     return CategoryProductPricesGrossNode(bits[1])
 
 
-@register.filter(name='get_cheapest_price')
+@register.filter(name="get_cheapest_price")
 def get_cheapest_price(product, request):
     return product.get_price(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_price_net')
+@register.filter(name="get_cheapest_price_net")
 def get_cheapest_price_net(product, request):
     return product.get_price_net(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_price_gross')
+@register.filter(name="get_cheapest_price_gross")
 def get_cheapest_price_gross(product, request):
     return product.get_price_gross(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_standard_price')
+@register.filter(name="get_cheapest_standard_price")
 def get_cheapest_standard_price(product, request):
     return product.get_standard_price(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_standard_price_net')
+@register.filter(name="get_cheapest_standard_price_net")
 def get_cheapest_standard_price_net(product, request):
     return product.get_standard_price_net(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_standard_price_gross')
+@register.filter(name="get_cheapest_standard_price_gross")
 def get_cheapest_standard_price_gross(product, request):
     return product.get_standard_price_gross(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_for_sale_price')
+@register.filter(name="get_cheapest_for_sale_price")
 def get_cheapest_for_sale_price(product, request):
     return product.get_for_sale_price(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_for_sale_price_net')
+@register.filter(name="get_cheapest_for_sale_price_net")
 def get_cheapest_for_sale_price_net(product, request):
     return product.get_for_sale_price_net(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_for_sale_price_gross')
+@register.filter(name="get_cheapest_for_sale_price_gross")
 def get_cheapest_for_sale_price_gross(product, request):
     return product.get_for_sale_price_gross(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_base_price')
+@register.filter(name="get_cheapest_base_price")
 def get_cheapest_base_price(product, request):
     return product.get_base_price(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_base_price_net')
+@register.filter(name="get_cheapest_base_price_net")
 def get_cheapest_base_price_net(product, request):
     return product.get_base_price_net(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_base_price_gross')
+@register.filter(name="get_cheapest_base_price_gross")
 def get_cheapest_base_price_gross(product, request):
     return product.get_base_price_gross(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_base_packing_price')
+@register.filter(name="get_cheapest_base_packing_price")
 def get_cheapest_base_packing_price(product, request):
     return product.get_base_packing_price(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_base_packing_price_net')
+@register.filter(name="get_cheapest_base_packing_price_net")
 def get_cheapest_base_packing_price_net(product, request):
     return product.get_base_packing_price_net(request, amount=sys.maxint)
 
 
-@register.filter(name='get_cheapest_base_packing_price_gross')
+@register.filter(name="get_cheapest_base_packing_price_gross")
 def get_cheapest_base_packing_price_gross(product, request):
     return product.get_base_packing_price_gross(request, amount=sys.maxint)
