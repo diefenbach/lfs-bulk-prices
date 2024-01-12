@@ -6,6 +6,7 @@ from selenium import webdriver
 def browser(request):
     def fin():
         driver.close()
+
     request.addfinalizer(fin)
 
     driver = webdriver.Chrome()

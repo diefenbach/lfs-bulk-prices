@@ -1,19 +1,17 @@
 import json
+from django.urls import reverse
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
-
+from django.utils.translation import gettext_lazy as _
 from lfs.catalog.models import Product
 from lfs.core.templatetags.lfs_tags import currency
 from lfs.core.utils import set_message_to
-from . models import BulkPrice
+from .models import BulkPrice
 
 
 def lfs_bulk_prices_update(request):
-    """
-    """
+    """ """
     product_id = request.POST.get("product_id")
 
     if request.method == "POST":
@@ -46,7 +44,7 @@ def lfs_bulk_prices_update(request):
                     price_percentual=price_percentual,
                 )
             except IntegrityError:
-                message = _(u"Duplicated prices have been removed.")
+                message = _("Duplicated prices have been removed.")
 
     response = redirect(reverse("lfs_manage_product", kwargs={"product_id": product_id}))
     if message:
@@ -64,8 +62,10 @@ def update_prices(request, product_id):
     price = product.get_price_gross(request, amount=amount)
     base_price = product.get_base_price_gross(request, amount=amount)
 
-    result = json.dumps({
-        "standard_price": currency(price, request),
-        "base_price": currency(base_price, request),
-    })
-    return HttpResponse(result, content_type='application/json')
+    result = json.dumps(
+        {
+            "standard_price": currency(price, request),
+            "base_price": currency(base_price, request),
+        }
+    )
+    return HttpResponse(result, content_type="application/json")
