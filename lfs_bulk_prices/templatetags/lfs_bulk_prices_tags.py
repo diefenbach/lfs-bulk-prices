@@ -1,18 +1,16 @@
-import locale
 import sys
 
 from django import template
+from django.conf import settings
 from django.db.models import F
 from django.db.models import Min
 from django.utils.safestring import mark_safe
 from django.template import Library
-from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from lfs.catalog.models import Product
 from lfs.catalog.settings import CATEGORY_VARIANT_CHEAPEST_PRICES
 from lfs_bulk_prices.models import BulkPrice
-import lfs.core.views
 
 register = Library()
 
@@ -22,16 +20,13 @@ def bulk_prices_management(context, product):
     request = context.get("request")
     prices = BulkPrice.objects.filter(product=product)
 
-    if locale.getlocale(locale.LC_ALL)[0] is None:
-        lfs.core.views.one_time_setup()
-
     result = render_to_string(
         "lfs_bulk_prices/lfs_bulk_prices.html",
         request=request,
         context={
             "product": product,
             "prices": prices,
-            "currency": locale.localeconv()["int_curr_symbol"],
+            "currency": getattr(settings, "LFS_CURRENCY", "EUR"),
         },
     )
 
