@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.utils.formats import sanitize_separators
 from django.utils.translation import gettext_lazy as _
 from lfs.catalog.models import Product
 from lfs.core.templatetags.lfs_tags import currency
@@ -22,17 +23,18 @@ def lfs_bulk_prices_update(request):
         message = None
         for price_id in request.POST.getlist("price_id"):
             try:
-                amount = float(request.POST.get("amount-{}".format(price_id)))
+
+                amount = float(sanitize_separators(request.POST.get(f"amount-{price_id}")))
             except (TypeError, ValueError):
                 amount = 1.0
 
             try:
-                price_absolute = float(request.POST.get("price_absolute-{}".format(price_id)))
+                price_absolute = float(sanitize_separators(request.POST.get(f"price_absolute-{price_id}")))
             except (TypeError, ValueError):
                 price_absolute = 0.0
 
             try:
-                price_percentual = float(request.POST.get("price_percentual-{}".format(price_id)))
+                price_percentual = float(sanitize_separators(request.POST.get(f"price_percentual-{price_id}")))
             except (TypeError, ValueError):
                 price_percentual = 0.0
 
