@@ -66,8 +66,8 @@ def update_prices(request, product_id):
 
     result = json.dumps(
         {
-            "standard_price": currency(price, request),
-            "base_price": currency(base_price, request),
+            "standard_price": currency(price, request) + "*",
+            "base_price": currency(base_price, request) + "*",
         }
     )
     return HttpResponse(result, content_type="application/json")
