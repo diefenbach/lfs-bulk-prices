@@ -48,7 +48,7 @@ def lfs_bulk_prices_update(request):
             except IntegrityError:
                 message = _("Duplicated prices have been removed.")
 
-    response = redirect(reverse("lfs_manage_product", kwargs={"product_id": product_id}))
+    response = redirect(reverse("lfs_manage_product_data", kwargs={"id": product_id}))
     if message:
         set_message_to(response, message)
     return response
