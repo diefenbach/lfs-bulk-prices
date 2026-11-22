@@ -37,6 +37,9 @@ msgstr "Prozentualer Preis"
 msgid "Bulk prices"
 msgstr "Staffelpreise"
 
+msgid "Bulk prices calculator"
+msgstr "Staffelpreise"
+
 #: templates/lfs_bulk_prices/lfs_bulk_prices.html:16
 msgid "Absolute"
 msgstr "Absolut"
