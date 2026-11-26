@@ -1,36 +1,15 @@
 import sys
 
 from django import template
-from django.conf import settings
 from django.db.models import F
 from django.db.models import Min
-from django.utils.safestring import mark_safe
 from django.template import Library
-from django.template.loader import render_to_string
 
 from lfs.catalog.models import Product
 from lfs.catalog.settings import CATEGORY_VARIANT_CHEAPEST_PRICES
 from lfs_bulk_prices.models import BulkPrice
 
 register = Library()
-
-
-@register.simple_tag(takes_context=True)
-def bulk_prices_management(context, product):
-    request = context.get("request")
-    prices = BulkPrice.objects.filter(product=product)
-
-    result = render_to_string(
-        "lfs_bulk_prices/lfs_bulk_prices.html",
-        request=request,
-        context={
-            "product": product,
-            "prices": prices,
-            "currency": getattr(settings, "LFS_CURRENCY", "EUR"),
-        },
-    )
-
-    return mark_safe(result)
 
 
 class IfBulkPricesNode(template.Node):
