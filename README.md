@@ -1,78 +1,43 @@
-What is it?
-===========
+# lfs-bulk-prices
 
-LFS Carousel is pluggable carousel/slider application for use with LFS (Lightning Fast Shop)
+Bulk prices for [LFS](https://github.com/diefenbach/django-lfs): price tiers by quantity ("from 10 pieces 8.50 €").
 
-See project wiki for more details: https://github.com/pigletto/lfs-carousel/wiki/What-is-it%3F
+- A price calculator, `BulkPricesCalculator`, that picks the tier for the ordered amount.
+- A **Bulk prices** tab on the product management page, shown for products that use this calculator.
+- Template tags and a small script for the product page that show the tiers and update the price when the
+  customer changes the amount. lfs-theme includes them when the add-on is installed.
 
+## Installation
 
-Compatibility
-=============
-For django 1.4 use branch 1.0, for 1.5+ use current tip
+```sh
+pip install lfs-bulk-prices        # or, in lfs-project: uv sync --extra bulk-prices
+```
 
+```python
+# settings.py
+INSTALLED_APPS = [..., "lfs_bulk_prices"]
 
-Basic usage
-===========
+LFS_PRICE_CALCULATORS = [
+    ["lfs.gross_price.calculator.GrossPriceCalculator", _("Price includes tax")],
+    ["lfs.net_price.calculator.NetPriceCalculator", _("Price excludes tax")],
+    ["lfs_bulk_prices.calculator.BulkPricesCalculator", _("Bulk prices")],
+]
 
-* add lfs_carousel to INSTALLED_APPS in your settings.py
-* add lfs_carousel urls to your site urls.py like:
+# urls.py
+urlpatterns += [path("bulk-prices/", include("lfs_bulk_prices.urls"))]
+```
 
-  <pre lang="python"><code>
-      from lfs_carousel import carousel
-      urlpatterns += patterns("",
-        (...)
-        (r'^carousel/', include(carousel.urls)),
-        (...)
-      )
-  </code></pre>
-  
-* add carousel to the management panel. It will be visible at 'Shop' -> 'Settings' page as new 'Carousel' tab:
-  copy lfs/templates/manage/shop/shop.html to your theme and modify it by adding:
+Then run `python manage.py migrate`. In the management interface choose the price calculator "Bulk prices" for a
+product (or for the shop as default); the product then gets the **Bulk prices** tab.
 
-  ```html
-      {% load lfs_carousel_tags %}
-      ( ... )
-      <div id="manage-tabs">
-        <ul>
-            <li class="ui-tabs-nav-item"><a href="#data">{% trans 'Shop' %}</a></li>
-            <li class="ui-tabs-nav-item"><a href="#default-values">{% trans 'Default Values' %}</a></li>
-            <li class="ui-tabs-nav-item"><a href="#portlets">{% trans 'Portlets' %}</a></li>
-            **<li class="ui-tabs-nav-item"><a href="#carousel-items">{% trans 'Carousel' %}</a></li>**
-        </ul>
-      (...)
-      <div id="portlets">
-        {{ portlets|safe }}
-      </div>
-      {% carousel_management shop %}
-  ```
-  
-* add carousel to your shop's start page
+## Tests
 
-  By default lfs_carousel uses coin-slider but you can use anything you want. 
-  
-  First add necessary JavaScript and CSS files either to base.html or to shop.html:
+```sh
+pytest
+```
 
-  ```html
-      <link rel="stylesheet" href="{{ STATIC_URL }}coin-slider/coin-slider-styles.css" type="text/css" />
-      <script type="text/javascript" src="{{ STATIC_URL }}coin-slider/coin-slider.min.js"></script>
-      <script type="text/javascript">
-            $(document).ready(function() {
-                $('#coin-slider').coinslider({ width: 400, navigation: true, delay: 10000, hoverPause: true });
-            });
-      </script>
-  ```
-  
-  Second: copy lfstheme/templates/lfs/shop/shop.html to your theme and add:
-  ```html
-    {% load lfs_carousel_tags %}
-    (...)
-    {% carousel_show shop %}
-  ```
-  
-* run syncdb (!)
+The tests use `lfs_bulk_prices.tests.settings` and need django-lfs with its required add-ons installed.
 
+## License
 
-History
-=======
-
-1.1 - added Django 1.6 compatibility
+BSD-3-Clause, see `LICENSE.txt`.

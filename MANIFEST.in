@@ -1,2 +1,4 @@
-include README.txt
+include README.md LICENSE.txt
 recursive-include lfs_bulk_prices/templates *
+recursive-include lfs_bulk_prices/static *
+recursive-include lfs_bulk_prices/locale *
