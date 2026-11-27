@@ -10,7 +10,7 @@ Bulk prices for [LFS](https://github.com/diefenbach/django-lfs): price tiers by 
 ## Installation
 
 ```sh
-pip install lfs-bulk-prices        # or, in lfs-project: uv sync --extra bulk-prices
+pip install lfs-bulk-prices        # or, in lfs-starter: uv sync --extra bulk-prices
 ```
 
 ```python
