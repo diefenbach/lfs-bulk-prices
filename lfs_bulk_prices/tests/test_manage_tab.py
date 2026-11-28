@@ -102,3 +102,14 @@ def test_saving_drops_a_repeated_amount_and_keeps_the_rest(admin_client):
 
     assert response.status_code == 302
     assert list(BulkPrice.objects.filter(product=product).values_list("amount", flat=True)) == [1.0, 10.0]
+
+
+def test_tab_says_when_no_tiers_are_saved_yet(admin_client):
+    """The tab pre-fills a base price row for a product without tiers; it must not look saved (Höhne, 28.11.2026)."""
+    product = make_product(BULK)
+    url = reverse("lfs_manage_product_bulk_prices", args=[product.pk])
+
+    assert "No price tiers saved yet" in admin_client.get(url).content.decode()
+
+    BulkPrice.objects.create(product=product, amount=1, price_absolute=10)
+    assert "No price tiers saved yet" not in admin_client.get(url).content.decode()
