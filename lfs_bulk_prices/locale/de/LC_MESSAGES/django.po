@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-24 13:01+0100\n"
+"POT-Creation-Date: 2026-11-28 10:47+0100\n"
 "PO-Revision-Date: 2015-11-24 12:59+0100\n"
 "Last-Translator: Kai Diefenbach <kai.diefenbach@iqpp.de>\n"
 "Language-Team: DE <kai.diefenbach@iqpp.de>\n"
@@ -17,11 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: apps.py:19 apps.py:28 templates/lfs_bulk_prices/manage/tab.html:6
+msgid "Bulk prices"
+msgstr "Staffelpreise"
+
 #: models.py:16
 msgid "Product"
 msgstr "Produkt"
 
-#: models.py:17 templates/lfs_bulk_prices/lfs_bulk_prices.html:13
+#: models.py:17
 msgid "Amount"
 msgstr "Anzahl"
 
@@ -33,29 +37,79 @@ msgstr "Absoluter Preis"
 msgid "Price percentual"
 msgstr "Prozentualer Preis"
 
-#: templates/lfs_bulk_prices/lfs_bulk_prices.html:4
-msgid "Bulk prices"
-msgstr "Staffelpreise"
+#: templates/lfs_bulk_prices/manage/tab.html:7
+msgid "Set different prices based on quantity"
+msgstr "Preise abhängig von der Menge festlegen"
 
-msgid "Bulk prices calculator"
-msgstr "Staffelpreise"
+#: templates/lfs_bulk_prices/manage/tab.html:10
+msgid "Add Price Tier"
+msgstr "Preisstufe hinzufügen"
 
-#: templates/lfs_bulk_prices/lfs_bulk_prices.html:16
-msgid "Absolute"
-msgstr "Absolut"
+#: templates/lfs_bulk_prices/manage/tab.html:20
+msgid ""
+"No price tiers saved yet. The row below is a suggestion: click Save Changes "
+"to store it. Until then the product's own price applies."
+msgstr ""
+"Noch keine Preisstufen gespeichert. Die Zeile unten ist ein Vorschlag: "
+"Klicken Sie auf „Änderungen speichern“, um sie zu speichern. Bis dahin gilt "
+"der normale Preis des Produkts."
 
-#: templates/lfs_bulk_prices/lfs_bulk_prices.html:19
+#: templates/lfs_bulk_prices/manage/tab.html:26
+#: templates/lfs_bulk_prices/manage/tab.html:74
+msgid "Base Price"
+msgstr "Grundpreis"
+
+#: templates/lfs_bulk_prices/manage/tab.html:30
+msgid "Add new price tier"
+msgstr "Neue Preisstufe hinzufügen"
+
+#: templates/lfs_bulk_prices/manage/tab.html:34
+msgid "Remove this price tier"
+msgstr "Diese Preisstufe entfernen"
+
+#: templates/lfs_bulk_prices/manage/tab.html:43
+#: templates/lfs_bulk_prices/manage/tab.html:94
+msgid "Minimum Quantity"
+msgstr "Mindestmenge"
+
+#: templates/lfs_bulk_prices/manage/tab.html:50
+#: templates/lfs_bulk_prices/manage/tab.html:101
+msgid "Price per Unit"
+msgstr "Preis pro Einheit"
+
+#: templates/lfs_bulk_prices/manage/tab.html:58
+#: templates/lfs_bulk_prices/manage/tab.html:109
 msgid "Percentual"
 msgstr "Prozentual"
 
-#: templates/lfs_bulk_prices/lfs_bulk_prices.html:68
-msgid "Save"
-msgstr "Speichern"
+#: templates/lfs_bulk_prices/manage/tab.html:76
+msgid "Price Tier"
+msgstr "Preisstufe"
 
-#: templates/lfs_bulk_prices/lfs_bulk_prices.html:69
+#: templates/lfs_bulk_prices/manage/tab.html:128
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: views.py:44
+#: templates/lfs_bulk_prices/manage/tab.html:131
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: templates/lfs_bulk_prices/manage/tab.html:141
+msgid "No bulk prices configured"
+msgstr "Keine Staffelpreise festgelegt"
+
+#: templates/lfs_bulk_prices/manage/tab.html:142
+msgid "Add price tiers to offer quantity-based discounts"
+msgstr "Fügen Sie Preisstufen hinzu, um Mengenrabatte anzubieten"
+
+#: templates/lfs_bulk_prices/manage/tab.html:144
+msgid "Add First Price Tier"
+msgstr "Erste Preisstufe hinzufügen"
+
+#: views.py:68
 msgid "Duplicated prices have been removed."
 msgstr "Doppelte Preise wurden entfernt."
+
+#: views.py:69
+msgid "Bulk prices have been saved."
+msgstr "Staffelpreise wurden gespeichert."
