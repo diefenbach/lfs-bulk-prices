@@ -16,6 +16,9 @@
 
         <div id="bulk-prices-container">
             {% if not prices %}
+                <div class="alert alert-warning">
+                    {% trans "No price tiers saved yet. The row below is a suggestion: click Save Changes to store it. Until then the product's own price applies." %}
+                </div>
                 <!-- Default first price tier -->
                 <div class="bulk-price-card card mb-3 border-primary">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
