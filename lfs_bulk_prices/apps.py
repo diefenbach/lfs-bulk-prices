@@ -1,4 +1,4 @@
-"""App configuration: registers the bulk prices tab on the product management page."""
+"""App configuration: registers the bulk prices tab and the order listener."""
 
 from django.apps import AppConfig
 from django.http import HttpRequest
@@ -13,14 +13,19 @@ def uses_bulk_prices(request: HttpRequest, product) -> bool:
 
 
 class LfsBulkPricesConfig(AppConfig):
-    """Adds the "Bulk prices" tab to products that use the bulk prices calculator."""
+    """Adds the "Bulk prices" tab to products that use the bulk prices calculator and logs orders without a tier."""
 
     name = "lfs_bulk_prices"
     verbose_name = _("Bulk prices")
 
     def ready(self) -> None:
-        """Register the product tab."""
+        """Register the product tab and the warning about order items without a price tier."""
+        from lfs.core.signals import order_created
         from lfs.manage.products.tabs import ProductTab, register_product_tab
+
+        from .listeners import warn_about_items_without_tier
+
+        order_created.connect(warn_about_items_without_tier, dispatch_uid="lfs_bulk_prices_items_without_tier")
 
         register_product_tab(
             ProductTab(
